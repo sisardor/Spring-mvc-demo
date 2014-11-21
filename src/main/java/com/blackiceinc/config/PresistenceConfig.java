@@ -27,7 +27,8 @@ import com.google.common.base.Preconditions;
 @EnableTransactionManagement
 @PropertySource({ "classpath:persistence-mysql.properties" })
 @ComponentScan({ "com.blackiceinc.account" })
-//@EnableJpaRepositories(basePackages = "com.blackiceinc.account.dao")
+@EnableJpaRepositories(basePackages = "com.blackiceinc.account.dao")
+
 public class PresistenceConfig {
     public PresistenceConfig() {
         super();
@@ -38,7 +39,6 @@ public class PresistenceConfig {
 
 	@Bean(name="entityManagerFactory")
 	public LocalContainerEntityManagerFactoryBean entityManagerFactory() {
-		
 		System.out.println("*****************entityManagerFactory************************ ");
 		final LocalContainerEntityManagerFactoryBean em = new LocalContainerEntityManagerFactoryBean();
 		em.setDataSource(dataSource());

@@ -6,12 +6,13 @@ import javax.persistence.*;
  * Created by Mac on 11/20/2014.
  */
 @Entity
+@Table(name="account")
 public class Account {
     private Integer intAccountId;
     private Integer intTenantId;
     private String txtUsername;
     private String txtPassword;
-    private Role role;
+    //private Role role;
 
     @Id
     @Column(name = "intAccountId", nullable = false, insertable = true, updatable = true)
@@ -77,15 +78,25 @@ public class Account {
         result = 31 * result + (txtPassword != null ? txtPassword.hashCode() : 0);
         return result;
     }
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinTable(name = "account_role", joinColumns = {
-            @JoinColumn(name = "intAccountId", referencedColumnName = "intAccountId") }, inverseJoinColumns = {
-            @JoinColumn(name = "intRoleID", referencedColumnName = "intRoleID") })
-    public Role getRole() {
-        return role;
-    }
+//    @OneToOne(cascade = CascadeType.ALL)
+//    @JoinTable(name = "account_role", joinColumns = {
+//            @JoinColumn(name = "intAccountId", referencedColumnName = "intAccountId") }, inverseJoinColumns = {
+//            @JoinColumn(name = "intRoleID", referencedColumnName = "intRoleID") })
+//    public Role getRole() {
+//        return role;
+//    }
+//
+//    public void setRole(Role role) {
+//        this.role = role;
+//    }
 
-    public void setRole(Role role) {
-        this.role = role;
-    }
+	@Override
+	public String toString() {
+		return "Account [intAccountId=" + intAccountId + ", intTenantId="
+				+ intTenantId + ", txtUsername=" + txtUsername
+				+ ", txtPassword=" + txtPassword + "]";
+	}
+    
+    
+    
 }

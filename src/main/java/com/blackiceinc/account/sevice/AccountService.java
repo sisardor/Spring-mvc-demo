@@ -38,9 +38,9 @@ public class AccountService implements UserDetailsService{
         boolean credentialsNonExpired = true;
         boolean accountNonLocked = true;
         int roleID = 4;
-        if(domainUser.getRole() != null) {
-        	roleID = domainUser.getRole().getIntRoleId();
-        } 
+//        if(domainUser.getRole() != null) {
+//        	roleID = domainUser.getRole().getIntRoleId();
+//        } 
         return new User(
                 domainUser.getTxtUsername(), 
                 domainUser.getTxtPassword(), 
