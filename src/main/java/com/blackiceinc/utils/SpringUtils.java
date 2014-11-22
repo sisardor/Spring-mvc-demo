@@ -1,12 +1,19 @@
 package com.blackiceinc.utils;
 
+import org.springframework.context.support.AbstractApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 
-public class SpringUtils {
 
-	public static CentralDbService getBean(Class<CentralDbService> class1) {
-		System.out.println("_________ SpringUtils.getBean(" + class1.getSimpleName() + ")");
-		return null;
-	}
+public class SpringUtils{
+
+	@SuppressWarnings("unchecked")
+    public static <T> T getBean(String beanName) {
+		AbstractApplicationContext  context = new ClassPathXmlApplicationContext("beans.xml");
+		context.registerShutdownHook();
+		
+        return (T) context.getBean(beanName);
+    }
+	
 
 }

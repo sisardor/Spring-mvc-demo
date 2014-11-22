@@ -7,6 +7,7 @@
 	</configSuffixes>
 	<enableImports><![CDATA[true]]></enableImports>
 	<configs>
+		<config>src/main/resources/beans.xml</config>
 	</configs>
 	<autoconfigs>
 	</autoconfigs>
