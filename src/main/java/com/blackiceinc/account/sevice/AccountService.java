@@ -27,6 +27,9 @@ public class AccountService implements UserDetailsService{
 	
 	
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+		System.out.println("\n\n\n\n\n\n");
+        System.out.println(username);
+        System.out.println("\n\n\n\n\n\n");
 		Account domainUser = accountDao.findByUserName(username);
 		
 		System.out.println("\n\n\n\n\n\n");
@@ -38,9 +41,9 @@ public class AccountService implements UserDetailsService{
         boolean credentialsNonExpired = true;
         boolean accountNonLocked = true;
         int roleID = 4;
-//        if(domainUser.getRole() != null) {
-//        	roleID = domainUser.getRole().getIntRoleId();
-//        } 
+        if(domainUser.getRole() != null) {
+        	roleID = domainUser.getRole().getIntRoleId();
+        } 
         return new User(
                 domainUser.getTxtUsername(), 
                 domainUser.getTxtPassword(), 
