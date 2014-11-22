@@ -6,6 +6,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
+import org.springframework.context.annotation.ImportResource;
 import org.springframework.web.servlet.ViewResolver;
 import org.springframework.web.servlet.config.annotation.DefaultServletHandlerConfigurer;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
@@ -17,10 +18,11 @@ import org.springframework.web.servlet.view.JstlView;
 
 
 @Configuration
-@ComponentScan(basePackages = {"com.blackiceinc.web.contollers"})
+@ComponentScan(basePackages = {"com.blackiceinc.web.contollers","com.blackiceinc.beans"})
 @EnableWebMvc
 @Import({ SecurityConfig.class, PresistenceConfig.class  })
-public class WebMvcConfig extends WebMvcConfigurerAdapter {
+@ImportResource( { "classpath*:beans.xml" } )
+public class WebMvcConfig extends WebMvcConfigurerAdapter  {
 
 	private static final String VIEW_RESOLVER_PREFIX = "/WEB-INF/views/";
     private static final String VIEW_RESOLVER_SUFFIX = ".jsp";

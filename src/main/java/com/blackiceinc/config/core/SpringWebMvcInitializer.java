@@ -4,10 +4,11 @@ import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatche
 
 import com.blackiceinc.config.WebMvcConfig;
 
-public class SpringWebMvcInitializer extends AbstractAnnotationConfigDispatcherServletInitializer {
+public class SpringWebMvcInitializer extends AbstractAnnotationConfigDispatcherServletInitializer  {
 
 	@Override
 	protected Class<?>[] getRootConfigClasses() {
+		
 		return new Class[] { WebMvcConfig.class };
 	}
 
