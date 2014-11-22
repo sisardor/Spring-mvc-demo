@@ -1,83 +1,113 @@
 package com.blackiceinc.utils;
 
-public class CustomerDataSourceEntity {
+import org.apache.commons.dbcp2.BasicDataSource;
 
+public class CustomerDataSourceEntity extends BasicDataSource  {
+	private String URL;
+	private String dbName;
+	private String username;
+	private String password;
+	private String driverClass;
+	private String validationQuery;
+	private boolean testOnBorrow;
+	private String removeAbandoned;
+	
+
+	
 	public String getURL() {
-		
-		return "";
+		return URL;
+	}
+
+	public void setURL(String uRL) {
+		URL = uRL;
 	}
 
 	public String getDbName() {
-		
-		return "";
+		return dbName;
+	}
+
+	public void setDbName(String dbName) {
+		this.dbName = dbName;
 	}
 
 	public String getUsername() {
-		
-		return null;
+		return username;
+	}
+
+	public void setUsername(String username) {
+		this.username = username;
 	}
 
 	public String getPassword() {
-		
-		return null;
+		return password;
 	}
 
-	public int getMaxActive() {
-		
-		return 0;
-	}
-
-	public int getMaxIdle() {
-		
-		return 0;
-	}
-
-	public int getMinIdle() {
-		
-		return 0;
-	}
-
-	public int getMaxWait() {
-		return 0;
+	public void setPassword(String password) {
+		this.password = password;
 	}
 
 	public String getDriverClass() {
-		
-		return null;
+		return driverClass;
+	}
+
+	public void setDriverClass(String driverClass) {
+		this.driverClass = driverClass;
 	}
 
 	public String getValidationQuery() {
-		
-		return null;
+		return validationQuery;
 	}
 
-	public String getTestOnBorrow() {
-		return null;
+	public void setValidationQuery(String validationQuery) {
+		this.validationQuery = validationQuery;
 	}
 
-	public long getValidationIntervalMillis() {
+	public boolean getTestOnBorrow() {
+		return testOnBorrow;
+	}
 
-		return 0;
+	public void setTestOnBorrow(boolean testOnBorrow) {
+		this.testOnBorrow = testOnBorrow;
 	}
 
 	public String getRemoveAbandoned() {
-		return null;
+		return removeAbandoned;
+	}
+
+	public void setRemoveAbandoned(String removeAbandoned) {
+		this.removeAbandoned = removeAbandoned;
+	}
+
+	public int getMaxActive() {
+		return 100;
+	}
+
+	public int getMaxIdle() {
+		return 30;
+	}
+
+	public int getMinIdle() {
+		return 25;
+	}
+
+	public int getMaxWait() {
+		return 10000;
+	}
+
+	public long getValidationIntervalMillis() {
+		return 300;
 	}
 
 	public int getRemoveAbandonedTimeout() {
-
-		return 0;
+		return 300;
 	}
 
-	
-	public int getMinEvictableIdleTimeMillis() {
-		// TODO Auto-generated method stub
-		return 0;
+	public long getMinEvictableIdleTimeMillis() {
+		return 300;
 	}
 
 	public int getTimeBetweenIdleTimeMillis() {
-		// TODO Auto-generated method stub
-		return 0;
+		return 300;
 	}
 
 }

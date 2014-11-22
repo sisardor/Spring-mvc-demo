@@ -99,6 +99,7 @@ public class CustomerScope implements Scope{
 
 	private static synchronized void initializePool(CustomerDataSourceEntity customerDbProperties) {
 		ConfigurableDatasource ds = null;// SpringUtils.getBean(AdminBean.dataSource);
+		//create connection pool org.apache.commons.dbcp2.BasicDataSource
 		
 		ds.setUrl(customerDbProperties.getURL() + customerDbProperties.getDbName());
 		ds.setUsername(customerDbProperties.getUsername());
@@ -125,9 +126,7 @@ public class CustomerScope implements Scope{
 	
 	@Override
 	public String getConversationId() {
-		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		//return CustomerUrils.getCustomer();
-		return authentication.getName();
+		return CustomerUtils.getCustomer();
 	}
 
 	@Override
@@ -143,7 +142,6 @@ public class CustomerScope implements Scope{
 
 	@Override
 	public Object resolveContextualObject(String arg0) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
