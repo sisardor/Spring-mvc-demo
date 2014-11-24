@@ -46,6 +46,7 @@ public class WebMvcConfig extends WebMvcConfigurerAdapter  {
         exceptionMappings.put("org.springframework.dao.EmptyResultDataAccessException", "error/warning");
         exceptionMappings.put("java.lang.Exception", "error/error");
         exceptionMappings.put("java.lang.RuntimeException", "error/error");
+        exceptionMappings.put("com.blackiceinc.exceptions.CustomerNotRegisteredException", "login?error");
         
 
         exceptionResolver.setExceptionMappings(exceptionMappings);
@@ -55,6 +56,7 @@ public class WebMvcConfig extends WebMvcConfigurerAdapter  {
         statusCodes.put("error/404", "404");
         statusCodes.put("error/error", "500");
         statusCodes.put("error/warning", "400");
+        statusCodes.put("login?error", "200");
 
         exceptionResolver.setStatusCodes(statusCodes);
 

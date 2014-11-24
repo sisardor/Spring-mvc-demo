@@ -8,7 +8,7 @@ public class CustomerUtils {
 	public static String getCustomer() {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		if(authentication == null) {
-			return "admin";
+			return "shared";
 		} else {
 			return authentication.getName();
 		}

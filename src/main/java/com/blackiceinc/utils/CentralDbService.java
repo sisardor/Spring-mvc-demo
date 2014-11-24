@@ -13,7 +13,7 @@ public class CentralDbService  {
 		Set<String> tokens = new HashSet<>();
 		tokens.add("admin");
 		tokens.add("sardor");
-		tokens.add("con_id");
+		tokens.add("anonymousUser");
 		
 		return tokens;
 	}

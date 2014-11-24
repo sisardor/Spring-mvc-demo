@@ -92,6 +92,7 @@ public class CustomerScope implements Scope{
 		
 		try {
 			CustomerDataSourceEntity customerDbProperties = centralDbService.getActiveCustomerDataSource();
+			customerDbProperties.setDbName(customerName);
 			initializePool(customerDbProperties);
 		} catch (Exception e) {
 			failedBootstrappedCustomers.add(customerName);
@@ -126,7 +127,8 @@ public class CustomerScope implements Scope{
 //		ds.setMinEvictableIdleTimeMillis(customerDbProperties.getMinEvictableIdleTimeMillis());
 //		ds.setTimeBetweenIdleTimeMillis(customerDbProperties.getTimeBetweenIdleTimeMillis());
 		
-		ComboPooledDataSource cpds = new ComboPooledDataSource("admin");
+		ComboPooledDataSource cpds = new ComboPooledDataSource(customerDbProperties.getDbName());
+
 		cpds.setJdbcUrl("jdbc:mysql://localhost:3306/"+"gcd_master");
 		cpds.setUser("blackinc_admin");
 		cpds.setPassword("Blackice@2014");

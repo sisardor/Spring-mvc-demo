@@ -64,10 +64,11 @@ public class SimpleMultiTenantConnectionProvider implements MultiTenantConnectio
 
 	@Override
 	public Connection getConnection(String tenantIdentifier) throws SQLException {
+		
 		PooledDataSource pds = C3P0Registry.pooledDataSourceByName(tenantIdentifier);
 //		DataSource tenantDatSource = SpringUtils.getBean(AdminBean.dataSource);
 //		return tenantDatSource.getConnection();
-		System.out.println("______ getConnection()");
+		System.out.println("______ getConnection(" +tenantIdentifier+")");
 		if (pds == null) {
 			System.out.println("______ NULL");
 		}
