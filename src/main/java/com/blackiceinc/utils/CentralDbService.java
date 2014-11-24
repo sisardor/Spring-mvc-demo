@@ -1,6 +1,7 @@
 package com.blackiceinc.utils;
 
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Set;
 
 public class CentralDbService  {
@@ -10,8 +11,10 @@ public class CentralDbService  {
 
 	public Set<String> getActiveCustomerTokens() {
 		Set<String> tokens = new HashSet<>();
-		tokens.add("adminxx");
+		tokens.add("admin");
+		tokens.add("sardor");
 		tokens.add("con_id");
+		
 		return tokens;
 	}
 
