@@ -44,6 +44,7 @@ public class AccountService implements UserDetailsService{
         if(domainUser.getRole() != null) {
         	roleID = domainUser.getRole().getIntRoleId();
         } 
+        
         return new User(
                 domainUser.getTxtUsername(), 
                 domainUser.getTxtPassword(), 

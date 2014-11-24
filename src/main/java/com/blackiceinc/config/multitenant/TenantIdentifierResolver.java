@@ -2,11 +2,14 @@ package com.blackiceinc.config.multitenant;
 
 import org.hibernate.context.spi.CurrentTenantIdentifierResolver;
 
+import com.blackiceinc.utils.CustomerUtils;
+
 public class TenantIdentifierResolver implements CurrentTenantIdentifierResolver {
 
 	@Override
 	public String resolveCurrentTenantIdentifier() {
-		return null;
+		System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> resolveCurrentTenantIdentifier");
+		return CustomerUtils.getCustomer();
 	}
 
 	@Override

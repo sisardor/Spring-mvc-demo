@@ -1,6 +1,7 @@
 package com.blackiceinc.config;
 
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Properties;
 
@@ -21,8 +22,9 @@ import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
+import com.blackiceinc.config.multitenant.SimpleMultiTenantConnectionProvider;
+import com.blackiceinc.config.multitenant.TenantIdentifierResolver;
 import com.google.common.base.Preconditions;
-
 @Configuration
 @EnableTransactionManagement
 @PropertySource({ "classpath:persistence-mysql.properties" })
@@ -39,14 +41,25 @@ public class PresistenceConfig {
 
 	@Bean(name="entityManagerFactory")
 	public LocalContainerEntityManagerFactoryBean entityManagerFactory() {
+		
 		System.out.println("*****************entityManagerFactory************************ ");
-		final LocalContainerEntityManagerFactoryBean em = new LocalContainerEntityManagerFactoryBean();
+		final LocalContainerEntityManagerFactoryBean em =  new LocalContainerEntityManagerFactoryBean();//SpringUtils.getBean("entityManagerFactory");
 		em.setDataSource(dataSource());
 		em.setPackagesToScan(new String[] {"com.blackiceinc.account.model"});
 		
 		final HibernateJpaVendorAdapter jpaVendorAdapter = new HibernateJpaVendorAdapter();
 		em.setJpaVendorAdapter(jpaVendorAdapter);
-		em.setJpaPropertyMap(this.jpaProperties());
+		//em.setJpaPropertyMap(this.jpaProperties());
+		Properties props = new Properties();
+		props.put("hibernate.dialect", "org.hibernate.dialect.MySQL5Dialect");
+		props.put("hibernate.hbm2ddl.auto", env.getProperty("hibernate.hbm2ddl.auto"));
+		
+		props.put("hibernate.multiTenancy", "DATABASE");
+		props.put("hibernate.tenant_identifier_resolver", "com.blackiceinc.config.multitenant.TenantIdentifierResolver");
+		props.put("hibernate.hibernate.multi_tenant_connection_provider", "com.blackiceinc.config.multitenant.SimpleMultiTenantConnectionProvider");
+		
+		
+		em.setJpaProperties(props);
 		
 		return em;
 	}
@@ -86,10 +99,24 @@ public class PresistenceConfig {
 		Map<String, Object> props = new HashMap<String, Object>();
 		props.put("hibernate.dialect", env.getProperty("hibernate.dialect"));
 		props.put("hibernate.show_sql", env.getProperty("hibernate.show_sql"));
+		//props.put("hibernate.hbm2ddl.auto", env.getProperty("hibernate.hbm2ddl.auto"));
 		
-		//props.put("hibernate.multiTenancy", "DATABASE");
-//		props.put("hibernate.tenant_identifier_resolver", TenantIdentifierResolver.class.getName());
-//		props.put("hibernate.hibernate.multi_tenant_connection_provider", SimpleMultiTenantConnectionProvider.class.getName());
+		
+		props.put("hibernate.tenant_identifier_resolver", TenantIdentifierResolver.class.getName());
+		props.put("hibernate.hibernate.multi_tenant_connection_provider", SimpleMultiTenantConnectionProvider.class.getName());
+		props.put("hibernate.multiTenancy", "DATABASE");
+		//printMap(props);
+		
 		return props;
     }
+    
+    @SuppressWarnings("rawtypes")
+	public static void printMap(Map mp) {
+	    Iterator it = mp.entrySet().iterator();
+	    while (it.hasNext()) {
+	        Map.Entry pairs = (Map.Entry)it.next();
+	        System.out.println("______printMap_______ "+pairs.getKey() + " = " + pairs.getValue());
+	        it.remove(); // avoids a ConcurrentModificationException
+	    }
+	}
 }
