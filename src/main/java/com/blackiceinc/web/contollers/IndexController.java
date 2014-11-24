@@ -32,7 +32,7 @@ public class IndexController {
 	@ModelAttribute("myRequestObject")
 	public void addStuffToRequestScope() {
 		System.out.println("================= Inside of addStuffToRequestScope =================");
-		//UserInfoBean  user = SpringUtils.getBean("userInfoBean");
+		UserInfoBean  user = SpringUtils.getBean("userInfoBean");
 		//return bean;
 	}
 

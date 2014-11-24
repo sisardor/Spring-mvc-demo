@@ -1,5 +1,6 @@
 package com.blackiceinc.utils;
 
+import java.beans.PropertyVetoException;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
@@ -8,12 +9,12 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import org.springframework.beans.factory.ObjectFactory;
 import org.springframework.beans.factory.config.Scope;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 
 import com.blackiceinc.beans.AdminBean;
 import com.blackiceinc.exceptions.CustomerNotRegisteredException;
+import com.blackiceinc.exceptions.FailedBootstrapCusomerAccessException;
 import com.blackiceinc.exceptions.RuntimeFaultException;
+import com.mchange.v2.c3p0.ComboPooledDataSource;
 
 
 public class CustomerScope implements Scope{
@@ -52,7 +53,7 @@ public class CustomerScope implements Scope{
 			} else {
 				System.out.println("_________ bootstrappedCustomers contains true");
 				if(failedBootstrappedCustomers.contains(customerName)){
-					//throw new FailedBootstrapCusomerAccessException("");
+					throw new FailedBootstrapCusomerAccessException("Failed Bootstrap Cusomer Access Exception");
 				}
 			}
 			printMap(customerBeanMap);
@@ -86,7 +87,7 @@ public class CustomerScope implements Scope{
 		if(centralDbService.getActiveCustomerTokens().contains(customerName) == false) {
 			System.out.println("_________ if contains("+customerName +") = "+centralDbService.getActiveCustomerTokens().contains(customerName)+"");
 			failedBootstrappedCustomers.add(customerName);
-			//throw new CustomerNotRegisteredException("Trying to bootstarp but customer wasn't found in the central Database"); 
+			throw new CustomerNotRegisteredException("Trying to bootstarp but customer wasn't found in the central Database"); 
 		}
 		
 		try {
@@ -94,36 +95,49 @@ public class CustomerScope implements Scope{
 			initializePool(customerDbProperties);
 		} catch (Exception e) {
 			failedBootstrappedCustomers.add(customerName);
-			//throw new RuntimeFaultException("Failed to boostrap customer: " + customerName, e);
+			throw new RuntimeFaultException("Failed to boostrap customer: " + customerName, e);
 		}
 	}
 	
 
 
 	private static synchronized void initializePool(CustomerDataSourceEntity customerDbProperties) {
-		ConfigurableDatasource ds = null;// SpringUtils.getBean(AdminBean.dataSource);
+		//ConfigurableDatasourceXX ds = null;// SpringUtils.getBean(AdminBean.dataSource);
 		//create connection pool org.apache.commons.dbcp2.BasicDataSource
 		
-		ds.setUrl(customerDbProperties.getURL() + customerDbProperties.getDbName());
-		ds.setUsername(customerDbProperties.getUsername());
-		ds.setPassword(customerDbProperties.getPassword());
-		ds.setMaxActive(customerDbProperties.getMaxActive());
-		ds.setInitialSize(1);
-		ds.setMaxIdle(customerDbProperties.getMaxIdle());
-		ds.setMinIdle(customerDbProperties.getMinIdle());
-		ds.setMaxWait(customerDbProperties.getMaxWait());
+//		ds.setUrl(customerDbProperties.getURL() + customerDbProperties.getDbName());
+//		ds.setUsername(customerDbProperties.getUsername());
+//		ds.setPassword(customerDbProperties.getPassword());
+//		ds.setMaxActive(customerDbProperties.getMaxActive());
+//		ds.setInitialSize(1);
+//		ds.setMaxIdle(customerDbProperties.getMaxIdle());
+//		ds.setMinIdle(customerDbProperties.getMinIdle());
+//		ds.setMaxWait(customerDbProperties.getMaxWait());
+//		
+//		ds.setDriverClassName(customerDbProperties.getDriverClass());
+//		ds.setDefaultAutoCommit(false);
+//		ds.setValidationQuery(customerDbProperties.getValidationQuery());
+//		ds.setTestOnBorrow(customerDbProperties.getTestOnBorrow());
+//		ds.setValidationIntervalMillis(customerDbProperties.getValidationIntervalMillis());
+//		
+//		ds.setRemoveAbandoned(customerDbProperties.getRemoveAbandoned());
+//		ds.setRemoveAbandonedTimeout(customerDbProperties.getRemoveAbandonedTimeout());
+//		
+//		ds.setMinEvictableIdleTimeMillis(customerDbProperties.getMinEvictableIdleTimeMillis());
+//		ds.setTimeBetweenIdleTimeMillis(customerDbProperties.getTimeBetweenIdleTimeMillis());
 		
-		ds.setDriverClassName(customerDbProperties.getDriverClass());
-		ds.setDefaultAutoCommit(false);
-		ds.setValidationQuery(customerDbProperties.getValidationQuery());
-		ds.setTestOnBorrow(customerDbProperties.getTestOnBorrow());
-		ds.setValidationIntervalMillis(customerDbProperties.getValidationIntervalMillis());
-		
-		ds.setRemoveAbandoned(customerDbProperties.getRemoveAbandoned());
-		ds.setRemoveAbandonedTimeout(customerDbProperties.getRemoveAbandonedTimeout());
-		
-		ds.setMinEvictableIdleTimeMillis(customerDbProperties.getMinEvictableIdleTimeMillis());
-		ds.setTimeBetweenIdleTimeMillis(customerDbProperties.getTimeBetweenIdleTimeMillis());
+		ComboPooledDataSource cpds = new ComboPooledDataSource("admin");
+		cpds.setJdbcUrl("jdbc:mysql://localhost:3306/"+"gcd_master");
+		cpds.setUser("blackinc_admin");
+		cpds.setPassword("Blackice@2014");
+		cpds.setInitialPoolSize(5);
+		cpds.setMaxConnectionAge(10000);
+		try {
+			cpds.setDriverClass("com.mysql.jdbc.Driver");
+		} catch (PropertyVetoException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
 	}
 	
@@ -162,7 +176,7 @@ public class CustomerScope implements Scope{
 		if(bootstrappedCustomers.contains(customerName) == false) {
 			return;
 		}
-		ConfigurableDatasource ds = SpringUtils.getBean(AdminBean.dataSource);
+		ConfigurableDatasourceXX ds = SpringUtils.getBean(AdminBean.dataSource);
 		ds.close();
 		
 	}

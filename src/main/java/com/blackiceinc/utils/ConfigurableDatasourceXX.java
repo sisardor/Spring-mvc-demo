@@ -4,7 +4,7 @@ import org.apache.commons.dbcp2.BasicDataSource;
 
 
 
-public class ConfigurableDatasource extends BasicDataSource {
+public class ConfigurableDatasourceXX extends BasicDataSource {
 	private String url;
 	private String username;
 	private String password;

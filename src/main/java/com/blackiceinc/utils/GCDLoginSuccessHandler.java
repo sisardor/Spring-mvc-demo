@@ -26,7 +26,7 @@ public class GCDLoginSuccessHandler implements
 	@Override
 	public void onAuthenticationSuccess(HttpServletRequest request,  HttpServletResponse response, Authentication authentication) throws IOException,
 			ServletException {
-		System.out.println("***********************************************************");
+		System.out.println("************************* Authentication success **********************************");
 		handle(request, response, authentication);
         clearAuthenticationAttributes(request);
         request.getSession().setMaxInactiveInterval(60*60);
