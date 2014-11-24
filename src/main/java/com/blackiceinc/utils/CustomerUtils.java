@@ -7,7 +7,7 @@ public class CustomerUtils {
 
 	public static String getCustomer() {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		return authentication.getName();
+		return "admin";
 	}
 
 }

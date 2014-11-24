@@ -3,17 +3,20 @@ package com.blackiceinc.account.model;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.Table;
 
 /**
  * Created by Mac on 11/20/2014.
  */
 @Entity
+@Table(name="role")
 public class Role {
     private Integer intRoleId;
     private String txtRoleName;
 
-    @Id
+    @Id @GeneratedValue
     @Column(name = "intRoleID", nullable = false, insertable = true, updatable = true)
     public Integer getIntRoleId() {
         return intRoleId;

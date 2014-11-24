@@ -14,7 +14,7 @@ public class Account {
     private String txtPassword;
     private Role role;
 
-    @Id
+    @Id @GeneratedValue
     @Column(name = "intAccountId", nullable = false, insertable = true, updatable = true)
     public Integer getIntAccountId() {
         return intAccountId;

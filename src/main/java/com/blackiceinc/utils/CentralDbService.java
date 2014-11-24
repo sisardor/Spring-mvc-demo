@@ -35,4 +35,9 @@ public class CentralDbService  {
 		System.out.println("Bean will destroy now.");
 	}
 
+	public void clearTenantCache(String customerName) {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

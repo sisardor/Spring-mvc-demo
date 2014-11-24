@@ -1,6 +1,7 @@
 package com.blackiceinc.utils;
 
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
@@ -10,6 +11,7 @@ import org.springframework.beans.factory.config.Scope;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
+import com.blackiceinc.beans.AdminBean;
 import com.blackiceinc.exceptions.CustomerNotRegisteredException;
 import com.blackiceinc.exceptions.RuntimeFaultException;
 
@@ -53,8 +55,9 @@ public class CustomerScope implements Scope{
 					//throw new FailedBootstrapCusomerAccessException("");
 				}
 			}
-			
+			printMap(customerBeanMap);
 			Object bean = beanMap.get(beanName);
+			System.out.println("_________ Object bean = beanMap.get("+ beanName + ");");
 			if(bean == null){
 				bean = objectFactory.getObject();
 				beanMap.put(beanName, bean);
@@ -135,9 +138,33 @@ public class CustomerScope implements Scope{
 	}
 
 	@Override
-	public Object remove(String arg0) {
+	public Object remove(String name) {
 		System.out.println("-------> remove");
-		return null;
+		
+		Map<String, Object> beanMap = customerBeanMap.get(getConversationId());
+		return beanMap == null ? null : beanMap.remove(name);
+	}
+	public static void removeCustomer(String customerName) {
+		Map<String, Object> beanMap = getBeanMap(customerName);
+		synchronized (beanMap) {
+			failedBootstrappedCustomers.remove(customerName);
+			customerBeanMap.remove(customerName);
+			bootstrappedCustomers.remove(customerName);
+			uninitializePool(customerName);
+			
+			CentralDbService centralDbService = null;//SpringUtils.getBean(CentralDbService.class);
+			centralDbService.clearTenantCache(customerName);
+		}
+		
+	}
+
+	private static void uninitializePool(String customerName) {
+		if(bootstrappedCustomers.contains(customerName) == false) {
+			return;
+		}
+		ConfigurableDatasource ds = SpringUtils.getBean(AdminBean.dataSource);
+		ds.close();
+		
 	}
 
 	@Override
@@ -145,4 +172,16 @@ public class CustomerScope implements Scope{
 		return null;
 	}
 
+	
+	
+	
+	@SuppressWarnings("rawtypes")
+	public static void printMap(Map mp) {
+	    Iterator it = mp.entrySet().iterator();
+	    while (it.hasNext()) {
+	        Map.Entry pairs = (Map.Entry)it.next();
+	        System.out.println("______printMap_______ "+pairs.getKey() + " = " + pairs.getValue());
+	        it.remove(); // avoids a ConcurrentModificationException
+	    }
+	}
 }

@@ -1,5 +1,6 @@
 package com.blackiceinc.factory;
 
+
 import java.sql.Connection;
 import java.sql.SQLException;
 
@@ -20,6 +21,7 @@ public class CentralConnectionFactory {
 	}
 
 	public Connection getPooledConnection() throws SQLException {
+		
 		return dataSource.getConnection();
 	}
 
