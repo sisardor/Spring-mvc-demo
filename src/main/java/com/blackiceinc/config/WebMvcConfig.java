@@ -20,7 +20,7 @@ import org.springframework.web.servlet.view.JstlView;
 @Configuration
 @ComponentScan(basePackages = {"com.blackiceinc.web.contollers","com.blackiceinc.beans"})
 @EnableWebMvc
-@Import({ SecurityConfig.class, PresistenceConfig.class  })
+@Import({ SecurityConfig.class, PresistenceConfig.class })
 @ImportResource( { "classpath*:beans.xml" } )
 public class WebMvcConfig extends WebMvcConfigurerAdapter  {
 

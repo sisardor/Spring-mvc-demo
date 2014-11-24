@@ -27,14 +27,14 @@ public class AccountService implements UserDetailsService{
 	
 	
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-		System.out.println("\n\n\n\n\n\n");
-        System.out.println(username);
-        System.out.println("\n\n\n\n\n\n");
+		System.out.println("\n\nloadUserByUsername\n");
+        System.out.println("username " + username);
+        System.out.println("\n");
 		Account domainUser = accountDao.findByUserName(username);
-		
-		System.out.println("\n\n\n\n\n\n");
+		System.out.println("Account domainUser = accountDao.findByUserName("+ username + "); ");
+
         System.out.println(domainUser);
-        System.out.println("\n\n\n\n\n\n");
+        System.out.println("\n\n");
         
 		boolean enabled = true;
         boolean accountNonExpired = true;

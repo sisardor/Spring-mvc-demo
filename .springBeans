@@ -8,6 +8,7 @@
 	<enableImports><![CDATA[true]]></enableImports>
 	<configs>
 		<config>src/main/resources/beans.xml</config>
+		<config>src/main/resources/persistence.xml</config>
 	</configs>
 	<autoconfigs>
 	</autoconfigs>

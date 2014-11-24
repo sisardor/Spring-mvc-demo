@@ -1,5 +1,6 @@
 package com.blackiceinc.config.multitenant;
 
+import java.beans.PropertyVetoException;
 import java.sql.Connection;
 import java.sql.SQLException;
 
@@ -14,9 +15,28 @@ import org.slf4j.LoggerFactory;
 
 import com.blackiceinc.beans.AdminBean;
 import com.blackiceinc.utils.SpringUtils;
+import com.mchange.v2.c3p0.C3P0Registry;
+import com.mchange.v2.c3p0.ComboPooledDataSource;
+import com.mchange.v2.c3p0.PooledDataSource;
 
 public class SimpleMultiTenantConnectionProvider implements MultiTenantConnectionProvider {
 	private static Logger log = LoggerFactory.getLogger(SimpleMultiTenantConnectionProvider.class );
+	private ComboPooledDataSource defaultDataSource;
+
+	public SimpleMultiTenantConnectionProvider() {
+		super();
+		defaultDataSource = new ComboPooledDataSource("shared");
+		defaultDataSource.setJdbcUrl("jdbc:mysql://localhost:3306/gcd_master");
+		defaultDataSource.setUser("blackinc_admin");
+		defaultDataSource.setPassword("Blackice@2014");
+		defaultDataSource.setInitialPoolSize(5);
+		defaultDataSource.setMaxConnectionAge(10000);
+		try {
+			defaultDataSource.setDriverClass("com.mysql.jdbc.Driver");
+		} catch (PropertyVetoException e) {
+			e.printStackTrace();
+		}
+	}
 
 	private static final long serialVersionUID = -7732669278535141397L;
 
@@ -38,25 +58,20 @@ public class SimpleMultiTenantConnectionProvider implements MultiTenantConnectio
 
 	@Override
 	public Connection getAnyConnection() throws SQLException {
-		System.out.println("______ getAnyConnection()");
-		BasicDataSource ds = new BasicDataSource();
-		ds.setDriverClassName("com.mysql.jdbc.Driver");
-		ds.setUsername("blackinc_admin");
-		ds.setPassword("Blackice@2014");
-		ds.setUrl("jdbc:mysql://localhost:3306/master");
-		return ds.getConnection();
+		// return CentralConnectionFacotry.getPooledFactoryInstance().getPooledConeection
+		return defaultDataSource.getConnection();
 	}
 
 	@Override
 	public Connection getConnection(String tenantIdentifier) throws SQLException {
+		PooledDataSource pds = C3P0Registry.pooledDataSourceByName(tenantIdentifier);
 //		DataSource tenantDatSource = SpringUtils.getBean(AdminBean.dataSource);
 //		return tenantDatSource.getConnection();
-		BasicDataSource ds = new BasicDataSource();
-		ds.setDriverClassName("com.mysql.jdbc.Driver");
-		ds.setUsername("blackinc_admin");
-		ds.setPassword("Blackice@2014");
-		ds.setUrl("jdbc:mysql://localhost:3306/master");
-		return ds.getConnection();
+		System.out.println("______ getConnection()");
+		if (pds == null) {
+			System.out.println("______ NULL");
+		}
+		return pds.getConnection();
 	}
 
 	@Override
