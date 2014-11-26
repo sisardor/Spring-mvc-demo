@@ -8,7 +8,7 @@ public class TenantIdentifierResolver implements CurrentTenantIdentifierResolver
 
 	@Override
 	public String resolveCurrentTenantIdentifier() {
-		System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> resolveCurrentTenantIdentifier");
+		System.out.println("_________ resolveCurrentTenantIdentifier");
 		return CustomerUtils.getCustomer();
 	}
 

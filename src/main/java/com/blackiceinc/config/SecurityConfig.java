@@ -64,8 +64,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		  .addFilterAfter(new CsrfTokenGeneratorFilter(), CsrfFilter.class)
 	      .authorizeRequests()
 	        //.antMatchers("/signup","/about", "/upload_test","/api/**", "resources/includes/pdf.html").permitAll() // #4
-	        .antMatchers("/guest", "/","/main*").permitAll() // #4
-	        .antMatchers("/admin/**", "/demo1*").hasRole("ADMIN") // #6
+	        .antMatchers("/guest", "/").permitAll() // #4
+	        .antMatchers("/admin/**", "/demo1*","/main*").hasRole("ADMIN") // #6
 	        .antMatchers("/reg/**").hasRole("REGULATOR") // #6
 	        .anyRequest().authenticated() // 7
 	        .and()

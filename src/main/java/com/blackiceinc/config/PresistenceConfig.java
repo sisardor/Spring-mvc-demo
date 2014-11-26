@@ -58,10 +58,10 @@ public class PresistenceConfig {
 		props.put("hibernate.multi_tenant_connection_provider", SimpleMultiTenantConnectionProvider.class.getName());
 		props.put("hibernate.multiTenancy", "DATABASE");
 		
-		props.put("hibernate.cache.use_second_level_cache", "true");
-		props.put("hibernate.cache.region.factory_class", "org.hibernate.cache.ehcache.EhCacheRegionFactory");
-		props.put("hibernate.cache.use_query_cache", "true");
-		props.put("hibernate.generate_statistics", "true");
+//		props.put("hibernate.cache.use_second_level_cache", "true");
+//		props.put("hibernate.cache.region.factory_class", "org.hibernate.cache.ehcache.EhCacheRegionFactory");
+//		props.put("hibernate.cache.use_query_cache", "true");
+//		props.put("hibernate.generate_statistics", "true");
 //		props.put("hibernate.c3p0.min_size", "5");
 //		props.put("hibernate.c3p0.max_size", "20");
 //		props.put("hibernate.c3p0.timeout", "300");
@@ -75,7 +75,7 @@ public class PresistenceConfig {
 		
 		System.out.println("*****************entityManagerFactory************************ ");
 		final LocalContainerEntityManagerFactoryBean em =  new LocalContainerEntityManagerFactoryBean();//SpringUtils.getBean("entityManagerFactory");
-		em.setDataSource(dataSource());
+		//em.setDataSource(dataSource());
 		em.setPackagesToScan(new String[] {"com.blackiceinc.account.model"});
 		em.setPersistenceUnitName("gcdPersistenceUnit");
 		final HibernateJpaVendorAdapter jpaVendorAdapter = new HibernateJpaVendorAdapter();

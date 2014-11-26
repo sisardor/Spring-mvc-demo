@@ -1,6 +1,12 @@
 package com.blackiceinc.config;
 
+import java.sql.SQLException;
+import java.util.Iterator;
 import java.util.Properties;
+import java.util.Set;
+
+import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -16,11 +22,14 @@ import org.springframework.web.servlet.handler.SimpleMappingExceptionResolver;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 import org.springframework.web.servlet.view.JstlView;
 
+import com.mchange.v2.c3p0.C3P0Registry;
+import com.mchange.v2.c3p0.PooledDataSource;
+
 
 @Configuration
-@ComponentScan(basePackages = {"com.blackiceinc.web.contollers","com.blackiceinc.beans"})
+@ComponentScan(basePackages = {"com.blackiceinc.web.contollers","com.blackiceinc.beans", "com.blackiceinc.web.exceptions.contollers"})
 @EnableWebMvc
-@Import({ SecurityConfig.class, PresistenceConfig.class })
+@Import({ SecurityConfig.class, PresistenceConfig.class, MyEventListener.class })
 @ImportResource( { "classpath*:beans.xml" } )
 public class WebMvcConfig extends WebMvcConfigurerAdapter  {
 
@@ -33,6 +42,7 @@ public class WebMvcConfig extends WebMvcConfigurerAdapter  {
     }
     @Override
     public void configureDefaultServletHandling(DefaultServletHandlerConfigurer configurer) {
+    	
         configurer.enable();
     }
     
@@ -46,7 +56,7 @@ public class WebMvcConfig extends WebMvcConfigurerAdapter  {
         exceptionMappings.put("org.springframework.dao.EmptyResultDataAccessException", "error/warning");
         exceptionMappings.put("java.lang.Exception", "error/error");
         exceptionMappings.put("java.lang.RuntimeException", "error/error");
-        exceptionMappings.put("com.blackiceinc.exceptions.CustomerNotRegisteredException", "login?error");
+        exceptionMappings.put("com.blackiceinc.exceptions.CustomerNotRegisteredException", "register/signup");
         
 
         exceptionResolver.setExceptionMappings(exceptionMappings);
@@ -56,7 +66,7 @@ public class WebMvcConfig extends WebMvcConfigurerAdapter  {
         statusCodes.put("error/404", "404");
         statusCodes.put("error/error", "500");
         statusCodes.put("error/warning", "400");
-        statusCodes.put("login?error", "200");
+        statusCodes.put("register/signup", "200");
 
         exceptionResolver.setStatusCodes(statusCodes);
 
@@ -101,5 +111,17 @@ public class WebMvcConfig extends WebMvcConfigurerAdapter  {
     // API
     
     
+    @PostConstruct
+    public void populateMovieCache() {
+    	
+    }
+
+    @PreDestroy
+    public void clearMovieCache() {
+        
+        
+    }
+    
+   
 
 }
