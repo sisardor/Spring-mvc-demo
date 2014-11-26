@@ -1,7 +1,6 @@
 package com.blackiceinc.utils;
 
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Set;
 
 public class CentralDbService  {
@@ -14,16 +13,26 @@ public class CentralDbService  {
 		tokens.add("admin");
 		tokens.add("sardor");
 		tokens.add("anonymousUser");
+		tokens.add("shared");
 		
 		return tokens;
 	}
 
-	public CustomerDataSourceEntity getActiveCustomerDataSource() {
+	public CustomerDataSourceEntity getActiveCustomerDataSource(String customerName) {
+		System.out.println("_________  getActiveCustomerDataSource for \"" + customerName + "\"");
 		CustomerDataSourceEntity customerDbProperties =	new CustomerDataSourceEntity();
-		customerDbProperties.setURL("jdbc:mysql://localhost:3306/test");
-		customerDbProperties.setDbName("com.mysql.jdbc.Driver");
-		customerDbProperties.setPassword("root");
-		customerDbProperties.setUsername("root");
+		if(customerName.equals("sardor")) {
+			customerDbProperties.setUsername("tenant_sardor");
+			customerDbProperties.setDbName(customerName);
+		} else if(customerName.equals("admin")) {
+			customerDbProperties.setUsername("tenant_admin");
+			customerDbProperties.setDbName(customerName);
+		} else {
+			customerDbProperties.setUsername("blackinc_admin");
+			customerDbProperties.setDbName(customerName);
+		}
+		customerDbProperties.setURL("jdbc:mysql://localhost:3306/gcd_master");
+		customerDbProperties.setPassword("Blackice@2014");
 		customerDbProperties.setRemoveAbandoned("true");
 		customerDbProperties.setTestOnBorrow(false);
 		customerDbProperties.setValidationQuery("select 1");

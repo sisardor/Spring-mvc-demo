@@ -14,10 +14,14 @@ import com.blackiceinc.beans.AdminBean;
 import com.blackiceinc.exceptions.CustomerNotRegisteredException;
 import com.blackiceinc.exceptions.FailedBootstrapCusomerAccessException;
 import com.blackiceinc.exceptions.RuntimeFaultException;
+import com.mchange.v2.c3p0.C3P0Registry;
 import com.mchange.v2.c3p0.ComboPooledDataSource;
+import com.mchange.v2.c3p0.PooledDataSource;
 
 
 public class CustomerScope implements Scope{
+	
+	
 	private final static Map<String, Map<String, Object>> customerBeanMap = new ConcurrentHashMap<>();
 	private final static Set<String> bootstrappedCustomers = new HashSet<String>();
 	private final static Set<String> failedBootstrappedCustomers = new HashSet<String>();
@@ -26,6 +30,7 @@ public class CustomerScope implements Scope{
 	public Object get(String beanName, ObjectFactory<?> objectFactory) {
 		System.out.println("_________ get("+beanName+")");
 		String customer = getConversationId();
+		System.out.println("_________ getConversationId() return \""+customer+"\"");
 		return getCustomerBean(beanName, customer, objectFactory);
 	}
 	
@@ -42,23 +47,28 @@ public class CustomerScope implements Scope{
 		Map<String, Object> beanMap = getBeanMap(customerName);
 		
 		synchronized (beanMap) {
+			if(bootstrappedCustomers.contains(customerName)){
+				System.out.println("_________ bootstrappedCustomers containts \"" + customerName + "\"");
+			}
 			
 			if(bootstrappedCustomers.contains(customerName) == false){ //bootstrappedCustomers --> Set<String>
-				System.out.println("_________ Before contains " + bootstrappedCustomers.contains(customerName));
 				bootstrappedCustomers.add(customerName);
 				bootstrapCustomer(customerName);
 				System.out.println("_________ CUSTOMER HASN'T BEEN INITALIZED");
-				System.out.println("_________ After contains " + bootstrappedCustomers.contains(customerName));
+
 				
 			} else {
-				System.out.println("_________ bootstrappedCustomers contains true");
 				if(failedBootstrappedCustomers.contains(customerName)){
+					System.out.println("!!!!!!!!!!! Failed Bootstrap Cusomer Access Exception");
 					throw new FailedBootstrapCusomerAccessException("Failed Bootstrap Cusomer Access Exception");
+				} else {
+					System.out.println("_________ failedBootstrappedCustomers doesn't containts \"" + customerName + "\"");
 				}
 			}
-			printMap(customerBeanMap);
+			//printMap(customerBeanMap);
+			
+			
 			Object bean = beanMap.get(beanName);
-			System.out.println("_________ Object bean = beanMap.get("+ beanName + ");");
 			if(bean == null){
 				bean = objectFactory.getObject();
 				beanMap.put(beanName, bean);
@@ -80,19 +90,23 @@ public class CustomerScope implements Scope{
 	}
 	
 	private static void bootstrapCustomer(String customerName) {
-		System.out.println("_________ bootstrapCustomer("+customerName+")");
+		System.out.println("_________ bootstrap customer \""+customerName+"\"");
 		
 		CentralDbService centralDbService = new CentralDbService();//.getBean(CentralDbService.class);
 	
+		System.out.print("_________ checking token for customer \""+customerName+"\" .... ");
 		if(centralDbService.getActiveCustomerTokens().contains(customerName) == false) {
-			System.out.println("_________ if contains("+customerName +") = "+centralDbService.getActiveCustomerTokens().contains(customerName)+"");
+			System.out.print("no token\n");
+			System.out.println("!!!!!!!!!!! Customer Not Registered Exception");
 			failedBootstrappedCustomers.add(customerName);
 			throw new CustomerNotRegisteredException("Trying to bootstarp but customer wasn't found in the central Database"); 
+		} else {
+			System.out.print("token found \n");
 		}
 		
 		try {
-			CustomerDataSourceEntity customerDbProperties = centralDbService.getActiveCustomerDataSource();
-			customerDbProperties.setDbName(customerName);
+			CustomerDataSourceEntity customerDbProperties = centralDbService.getActiveCustomerDataSource(customerName);
+			System.out.println("_________ initializing Pool customer \""+customerName+"\"");
 			initializePool(customerDbProperties);
 		} catch (Exception e) {
 			failedBootstrappedCustomers.add(customerName);
@@ -127,19 +141,25 @@ public class CustomerScope implements Scope{
 //		ds.setMinEvictableIdleTimeMillis(customerDbProperties.getMinEvictableIdleTimeMillis());
 //		ds.setTimeBetweenIdleTimeMillis(customerDbProperties.getTimeBetweenIdleTimeMillis());
 		
-		ComboPooledDataSource cpds = new ComboPooledDataSource(customerDbProperties.getDbName());
-
-		cpds.setJdbcUrl("jdbc:mysql://localhost:3306/"+"gcd_master");
-		cpds.setUser("blackinc_admin");
-		cpds.setPassword("Blackice@2014");
-		cpds.setInitialPoolSize(5);
-		cpds.setMaxConnectionAge(10000);
-		try {
-			cpds.setDriverClass("com.mysql.jdbc.Driver");
-		} catch (PropertyVetoException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		
+		System.out.println("=========== get pooled datasource " + customerDbProperties.getDbName());
+		PooledDataSource pdsX = C3P0Registry.pooledDataSourceByName(customerDbProperties.getDbName());
+		System.out.println("=========== pooled datasource returned "  + pdsX);
+		if (pdsX == null) {
+			ComboPooledDataSource cpds = new ComboPooledDataSource(customerDbProperties.getDbName());
+			cpds.setJdbcUrl("jdbc:mysql://localhost:3306/"+"gcd_master");
+			cpds.setUser(customerDbProperties.getUsername());
+			cpds.setPassword("Blackice@2014");
+			cpds.setInitialPoolSize(1);
+			cpds.setMaxPoolSize(1);
+			cpds.setMaxConnectionAge(10000);
+			try {
+				cpds.setDriverClass("com.mysql.jdbc.Driver");
+			} catch (PropertyVetoException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		} 
 		
 	}
 	
@@ -150,13 +170,10 @@ public class CustomerScope implements Scope{
 
 	@Override
 	public void registerDestructionCallback(String arg0, Runnable arg1) {
-		System.out.println("-------> registerDestructionCallback");
 	}
 
 	@Override
 	public Object remove(String name) {
-		System.out.println("-------> remove");
-		
 		Map<String, Object> beanMap = customerBeanMap.get(getConversationId());
 		return beanMap == null ? null : beanMap.remove(name);
 	}
@@ -191,13 +208,13 @@ public class CustomerScope implements Scope{
 	
 	
 	
-	@SuppressWarnings("rawtypes")
-	public static void printMap(Map mp) {
-	    Iterator it = mp.entrySet().iterator();
-	    while (it.hasNext()) {
-	        Map.Entry pairs = (Map.Entry)it.next();
-	        System.out.println("______printMap_______ "+pairs.getKey() + " = " + pairs.getValue());
-	        it.remove(); // avoids a ConcurrentModificationException
-	    }
-	}
+//	@SuppressWarnings("rawtypes")
+//	public static void printMap(Map mp) {
+//	    Iterator it = mp.entrySet().iterator();
+//	    while (it.hasNext()) {
+//	        Map.Entry pairs = (Map.Entry)it.next();
+//	        System.out.println("______printMap_______ "+pairs.getKey() + " = " + pairs.getValue());
+//	        it.remove(); // avoids a ConcurrentModificationException
+//	    }
+//	}
 }

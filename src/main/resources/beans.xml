@@ -21,5 +21,23 @@
 	<bean id="userInfoBean" class="com.blackiceinc.beans.UserInfoBean"
 		scope="customer" destroy-method="destroy" init-method="init">
 	</bean>
+	
+	<!-- cpds.setJdbcUrl("jdbc:sqlserver://localhost;databaseName=" + "sar");
+			cpds.setUser("username");
+			cpds.setPassword("password");
+			cpds.setInitialPoolSize(16);
+			cpds.setMaxConnectionAge(10000);-->
 
+	<bean id="sharedDataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource" scope="customer" destroy-method="close">
+		<property name="jdbcUrl" value="jdbc:mysql://localhost:3306/gcd_master"></property>
+		<property name="user" value="blackinc_admin"></property>
+		<property name="password" value="Blackice@2014"></property>
+		<property name="initialPoolSize" value="1"></property>
+		<property name="maxPoolSize" value="1"></property>
+		<property name="maxConnectionAge" value="10000"></property>
+		<property name="driverClass" value="com.mysql.jdbc.Driver"></property>
+		<constructor-arg value="shared"></constructor-arg>
+	</bean> 
+	
+	
 </beans>
