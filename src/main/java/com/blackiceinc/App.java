@@ -4,7 +4,7 @@ import java.beans.PropertyVetoException;
 import java.util.Set;
 
 import org.apache.cassandra.thrift.cassandraConstants;
-import org.neo4j.cypher.internal.compiler.v2_0.untilMatched;
+//import org.neo4j.cypher.internal.compiler.v2_0.untilMatched;
 
 import snaq.db.ConnectionPoolManager;
 import snaq.db.DBPoolDataSource;
@@ -16,20 +16,20 @@ import com.mchange.v2.c3p0.PooledDataSource;
 public class App {
 
 	public static void main(String[] args) {
-		DBPoolDataSource ds = new DBPoolDataSource();
-		ds.setName("pool-ds");
-		ds.setDescription("Pooling DataSource");
-		ds.setDriverClassName("com.mysql.jdbc.Driver");
-		ds.setUrl("jdbc:mysql://192.168.1.101:3306/ReplicantDB");
-		ds.setUser("Deckard");
-		ds.setPassword("TyrellCorp1982");
-		ds.setMinPool(5);
-		ds.setMaxPool(10);
-		ds.setMaxSize(30);
-		ds.setIdleTimeout(3600); // Specified in seconds.
-		ds.setValidationQuery("SELECT COUNT(*) FROM Replicants");
-
-		System.out.println(ds.getDescription());
+//		DBPoolDataSource ds = new DBPoolDataSource();
+//		ds.setName("pool-ds");
+//		ds.setDescription("Pooling DataSource");
+//		ds.setDriverClassName("com.mysql.jdbc.Driver");
+//		ds.setUrl("jdbc:mysql://192.168.1.101:3306/ReplicantDB");
+//		ds.setUser("Deckard");
+//		ds.setPassword("TyrellCorp1982");
+//		ds.setMinPool(5);
+//		ds.setMaxPool(10);
+//		ds.setMaxSize(30);
+//		ds.setIdleTimeout(3600); // Specified in seconds.
+//		ds.setValidationQuery("SELECT COUNT(*) FROM Replicants");
+//
+//		System.out.println(ds.getDescription());
 
 		ConnectionPoolManager cpm = null;
 		PooledDataSource pds = C3P0Registry.pooledDataSourceByName("sar");
