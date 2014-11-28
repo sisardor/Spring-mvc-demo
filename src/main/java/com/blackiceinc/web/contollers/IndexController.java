@@ -64,17 +64,17 @@ public class IndexController {
 	@RequestMapping(value = "/main")
 	@ResponseBody
 	public String sardor(Model model, HttpServletRequest request, HttpSession session) {
-		List<Account> list = serviceDao.findAll();
-
-		for(Account acc : list) {
-			System.out.println(acc);
-			
-		}
-		
-		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		System.out.println(authentication.getDetails());
-		System.out.println("session id " + session.getId());
-		return "home " + authentication.getName() + " " + authentication.isAuthenticated();
+//		List<Account> list = serviceDao.findAll();
+//
+//		for(Account acc : list) {
+//			System.out.println(acc);
+//			
+//		}
+//		
+//		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+//		System.out.println(authentication.getDetails());
+//		System.out.println("session id " + session.getId());
+		return "home main";
 	}
 	@RequestMapping(value = "/guest")
 	@ResponseBody
@@ -115,13 +115,13 @@ public class IndexController {
 			@RequestParam(value = "logout", required = false) String logout, 
 			HttpServletRequest request,HttpServletResponse response, Authentication authentication) throws IOException {
 
-		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-
-		if (!(auth instanceof AnonymousAuthenticationToken)) {
-		    /* The user is logged in :) */
-			redirectStrategy.sendRedirect(request, response, "/");
-		    return null;
-		}
+//		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+//
+//		if (!(auth instanceof AnonymousAuthenticationToken)) {
+//		    /* The user is logged in :) */
+//			redirectStrategy.sendRedirect(request, response, "/");
+//		    return null;
+//		}
 		
 		ModelAndView model = new ModelAndView();
 		
