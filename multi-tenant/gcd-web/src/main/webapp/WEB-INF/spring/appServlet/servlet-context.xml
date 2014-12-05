@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans:beans xmlns="http://www.springframework.org/schema/mvc"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:beans="http://www.springframework.org/schema/beans"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xsi:schemaLocation="http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.1.xsd">
+
+	<!-- DispatcherServlet Context: defines this servlet's request-processing infrastructure -->
+	
+	<!-- Enables the Spring MVC @Controller programming model -->
+	<annotation-driven />
+	<context:annotation-config/>
+
+	<context:component-scan base-package="com.blackiceinc" />
+	
+	
+ 
+    <beans:bean class="com.blackiceinc.utils.SpringUtils" />
+
+<!-- 		<beans:bean id="requestscope"  class="com.blackiceinc.impl.UserDataInfoImpl" >
+			<aop:scoped-proxy proxy-target-class="false" />
+		</beans:bean>
+	 -->
+	 
+	 
+	 <!-- 
+	 <beans:bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<beans:property name="location">
+			<beans:value>classpath:persistence-mysql.properties</beans:value>
+		</beans:property>
+	</beans:bean>
+
+
+	<beans:bean class="org.springframework.beans.factory.config.CustomScopeConfigurer">
+		<beans:property name="scopes">
+			<beans:map>
+				<beans:entry key="customer">
+					<beans:bean class="com.blackiceinc.config.multitenant.CustomerScope" />
+				</beans:entry>
+			</beans:map>
+		</beans:property>
+	</beans:bean>
+
+
+
+	<beans:bean id="userInfoBean" class="com.blackiceinc.beans.UserInfoBean"
+		scope="customer" destroy-method="destroy" init-method="init">
+	</beans:bean>
+
+
+	<beans:bean id="sharedDataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource"
+		scope="customer" destroy-method="close">
+		<beans:property name="jdbcUrl" value="${jdbc.url}"></beans:property>
+		<beans:property name="user" value="${jdbc.user}"></beans:property>
+		<beans:property name="password" value="${jdbc.pass}"></beans:property>
+		<beans:property name="initialPoolSize" value="3"></beans:property>
+		<beans:property name="maxPoolSize" value="3"></beans:property>
+		<beans:property name="maxConnectionAge" value="10000"></beans:property>
+		<beans:property name="driverClass" value="${jdbc.driverClassName}"></beans:property>
+		<beans:constructor-arg value="shared"></beans:constructor-arg>
+	</beans:bean>
+
+
+	<beans:bean id="requestscope" class="com.blackiceinc.impl.UserDataInfoImpl"
+		scope="request">
+		<aop:scoped-proxy proxy-target-class="false" />
+	</beans:bean>
+	-->
+</beans:beans>
